@@ -4,7 +4,7 @@ import sympy as smp
 class ComplexUtils :
 
     @staticmethod
-    def latexify_complex_number(real,imaginary) :
+    def latexifyComplexNumber(real : float,imaginary : float) -> str :
         if imaginary < 0 :
             imaginary = -1*imaginary
             return smp.latex(real - smp.I*imaginary)
@@ -12,13 +12,13 @@ class ComplexUtils :
             return smp.latex(real + smp.I*imaginary)
         
     @staticmethod
-    def create_polar_form(complex_number) :
-        argument = smp.arg(complex_number)
-        modulus = smp.Abs(complex_number)
+    def createPolarForm(complexNumber : str) -> str :
+        argument = smp.arg(complexNumber)
+        modulus = smp.Abs(complexNumber)
         return smp.latex(modulus * smp.exp(smp.I * argument))
     
     @staticmethod
-    def create_complex_form(real,imaginary) :
+    def createAlgebraicForm(real : float,imaginary : float) -> str:
         return real + imaginary * smp.I
 
 
