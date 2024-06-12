@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from ..domain.models.derivative_request import DerivativeMethod,DerivativeRequest
+from ..domain.models.derivative_request import DerivativeRequest
 from ..domain.models.derivative_response import DerivativeResponse
 from ..service.derivatives_service import DerivativesService
 
