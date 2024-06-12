@@ -1,16 +1,16 @@
 from pydantic import BaseModel 
-from typing import List
+from typing import List,Optional
 
 
 class DifferentialEquationRequest(BaseModel):
     variable : str
-    firstCoefficient : str = ""
-    secondCoefficient : str = ""
-    thirdCoefficient : str = ""
-    firstInitialCondition = List[str] = ["",""]
-    secondInitialCondition = List[str] = ["",""]
-    thirdInitialCondition = List[str] = ["",""]
-    constant : str = ""
-    rightHandSide : str = ""
+    firstCoefficient : Optional[str]
+    secondCoefficient : Optional[str]
+    thirdCoefficient : Optional[str]
+    firstInitialCondition = Optional[List[str]]
+    secondInitialCondition = Optional[List[str]] 
+    thirdInitialCondition = Optional[List[str]] 
+    constant : Optional[str]
+    rightHandSide : str = "0"
 
    
