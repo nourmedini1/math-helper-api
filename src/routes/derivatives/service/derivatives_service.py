@@ -1,7 +1,7 @@
 import sympy as smp
 from ....utils.parse_input import InputParser
 from typing import Union
-from ..domain.models.derivative_request import DerivativeMethod,DerivativeRequest
+from ..domain.models.derivative_request import DerivativeRequest
 from ..domain.models.derivative_response import DerivativeResponse
 import traceback
 
