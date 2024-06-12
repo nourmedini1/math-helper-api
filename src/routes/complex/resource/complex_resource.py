@@ -11,7 +11,7 @@ CONTEXT_PATH = "complex"
 
 
 complexRouter = APIRouter(
-    prefix="api/v1/complex",
+    prefix=f"api/v1/{CONTEXT_PATH}",
     tags=["complex-analysis"]
 )
 
