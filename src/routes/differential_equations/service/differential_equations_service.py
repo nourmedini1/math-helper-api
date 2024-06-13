@@ -1,8 +1,8 @@
 from typing import List,Optional,Dict
-from ....utils.parse_input import InputParser
+from utils.parse_input import InputParser
 import sympy as smp
-from ..domain.models.differential_equation_request import DifferentialEquationRequest
-from ..domain.models.differential_equation_response import DifferentialEquationResponse 
+from routes.differential_equations.domain.models.differential_equation_request import DifferentialEquationRequest
+from routes.differential_equations.domain.models.differential_equation_response import DifferentialEquationResponse 
 import traceback
 
 class DifferentialEquationsServiceMeta(type):

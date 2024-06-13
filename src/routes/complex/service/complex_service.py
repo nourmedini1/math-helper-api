@@ -1,8 +1,9 @@
-from ..domain.models.complex_operation_request import ComplexOperationRequest
-from ..domain.models.complex_operation_response import ComplexOperationResponse
-from ..domain.models.polar_form_request import PolarFormRequest
-from ..domain.models.polar_form_response import PolarFormResponse
-from ..domain.utils.complex_utils import ComplexUtils
+from routes.complex.domain.models.complex_operation_request import ComplexOperationRequest
+from routes.complex.domain.models.complex_operation_response import ComplexOperationResponse
+from routes.complex.domain.models.polar_form_request import PolarFormRequest
+from routes.complex.domain.models.polar_form_response import PolarFormResponse
+from routes.complex.domain.utils.complex_utils import ComplexUtils
+
 
 
 class ComplexServiceMeta(type):
@@ -21,44 +22,50 @@ class ComplexService(metaclass= ComplexServiceMeta) :
         polarForm = ComplexUtils.createPolarForm(complexNumber)
         return PolarFormResponse(algebraicForm=latexifiedComplexNumber, polarForm=polarForm)
     
-    def applyOperationOnComplexNumbers(self,request : ComplexOperationRequest) -> ComplexOperationResponse :
-        algebraicForm : str = None
-        polarForm : str = None
-        try :
-            if request.operation == "ADDITION" :
-                algebraicForm, polarForm = self._addComplexNumbers(
-                    real1=request.real1, real2=request.real2, imaginary1=request.imaginary1, imaginary2=request.imaginary2)
-            elif request.operation == "SUBTRACTION" :
-                algebraicForm, polarForm = self._subtractComplexNumbers(
-                    real1=request.real1, real2=request.real2, imaginary1=request.imaginary1, imaginary2=request.imaginary2)
-            elif request.operation == "MULTIPLICATION" :
-                algebraicForm, polarForm = self._multiplyComplexNumbers(
-                    real1=request.real1, real2=request.real2, imaginary1=request.imaginary1, imaginary2=request.imaginary2)
-            return ComplexOperationResponse(
-                z1= ComplexUtils.createAlgebraicForm(real=request.real1, imaginary=request.imaginary1),
-                z2= ComplexUtils.createAlgebraicForm(real=request.real2, imaginary=request.imaginary2),
-                polarZ1= ComplexUtils.createPolarForm(ComplexUtils.createAlgebraicForm(real=request.real1, imaginary=request.imaginary1)),
-                polarZ2= ComplexUtils.createPolarForm(ComplexUtils.createAlgebraicForm(real=request.real2, imaginary=request.imaginary2)),
-                algebraicResult=algebraicForm,
-                polarResult=polarForm
-                )
-        except Exception as e :
-            raise e 
+    def _parseComplexInput(self,request : ComplexOperationRequest) -> tuple[str] :
+        z1 = ComplexUtils.latexifyComplexNumber(real= request.real1,imaginary=request.imaginary1)
+        z2 = ComplexUtils.latexifyComplexNumber(real= request.real2,imaginary=request.imaginary2)
+        polarZ1 = ComplexUtils.createPolarForm(ComplexUtils.createAlgebraicForm(real=request.real1, imaginary=request.imaginary1))
+        polarZ2 = ComplexUtils.createPolarForm(ComplexUtils.createAlgebraicForm(real=request.real2, imaginary=request.imaginary2))
+        return z1,z2,polarZ1,polarZ2
+    
+    def _parseComplexOutput(self,real : float , imaginary : float) -> tuple[str] : 
+        resultAlgebraicForm = ComplexUtils.latexifyComplexNumber(real=real, imaginary=imaginary)
+        resultPolarForm = ComplexUtils.createPolarForm(ComplexUtils.createAlgebraicForm(real=real,imaginary=imaginary))
+        return resultAlgebraicForm,resultPolarForm
 
-    def _addComplexNumbers(real1 : float , real2 : float, imaginary1 : float, imaginary2 : float) -> tuple[str] :
-        resultAlgebraicForm = ComplexUtils.createAlgebraicForm(real=real1+real2, imaginary=imaginary1+imaginary2)
-        resultPolarForm = ComplexUtils.createPolarForm(resultAlgebraicForm)
-        return resultAlgebraicForm, resultPolarForm
+    def addComplexNumbers(self,request : ComplexOperationRequest) -> ComplexOperationResponse:
+        try :
+            z1,z2,polarZ1,polarZ2 = self._parseComplexInput(request)
+            resultReal = request.real1+request.real2
+            resultImaginary = request.imaginary1+request.imaginary2
+            resultAlgebraicForm,resultPolarForm = self._parseComplexOutput(resultReal,resultImaginary)
+            return ComplexOperationResponse(z1=z1, z2=z2, polarZ1=polarZ1, polarZ2=polarZ2, algebraicResult=resultAlgebraicForm, polarResult=resultPolarForm)
+        except Exception as e:
+            raise e
+        
+    def substractComplexNumbers(self,request : ComplexOperationRequest) -> ComplexOperationResponse :
+        try :
+            z1,z2,polarZ1,polarZ2 = self._parseComplexInput(request)
+            resultReal = request.real1-request.real2
+            resultImaginary = request.imaginary1-request.imaginary2
+            resultAlgebraicForm,resultPolarForm = self._parseComplexOutput(resultReal,resultImaginary)
+            return ComplexOperationResponse(z1=z1, z2=z2, polarZ1=polarZ1, polarZ2=polarZ2, algebraicResult=resultAlgebraicForm, polarResult=resultPolarForm)
+        except Exception as e:
+            raise e
+        
+    def multiplyComplexNumbers(self,request : ComplexOperationRequest) -> ComplexOperationResponse :
+        try :
+            z1,z2,polarZ1,polarZ2 = self._parseComplexInput(request)
+            resultReal = request.real1*request.real2 - request.imaginary1*request.imaginary2
+            resultImaginary = request.real1*request.imaginary2 + request.real2*request.imaginary1
+            resultAlgebraicForm,resultPolarForm = self._parseComplexOutput(resultReal,resultImaginary)
+            return ComplexOperationResponse(z1=z1, z2=z2, polarZ1=polarZ1, polarZ2=polarZ2, algebraicResult=resultAlgebraicForm, polarResult=resultPolarForm)
+        except Exception as e:
+            raise e
+        
+            
+       
+      
     
-    def _subtractComplexNumbers(real1 : float , real2 : float, imaginary1 : float, imaginary2 : float) -> tuple[str] :
-        resultAlgebraicForm = ComplexUtils.createAlgebraicForm(real=real1-real2, imaginary=imaginary1-imaginary2)
-        resultPolarForm = ComplexUtils.createPolarForm(resultAlgebraicForm)
-        return resultAlgebraicForm, resultPolarForm
-    
-    def _multiplyComplexNumbers(real1 : float , real2 : float, imaginary1 : float, imaginary2 : float) -> tuple[str] :
-        resultAlgebraicForm = ComplexUtils.createAlgebraicForm(
-            real=real1*real2 - imaginary1*imaginary2,
-            imaginary=real1*imaginary2 + real2*imaginary1)
-        resultPolarForm = ComplexUtils.createPolarForm(resultAlgebraicForm)
-        return resultAlgebraicForm, resultPolarForm
-    
+   

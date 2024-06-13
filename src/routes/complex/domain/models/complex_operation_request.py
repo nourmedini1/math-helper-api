@@ -13,6 +13,6 @@ class ComplexOperationRequest(BaseModel):
     imaginary1 : float
     real2 : float
     imaginary2 : float
-    operation : ComplexOperation
+   
 
     

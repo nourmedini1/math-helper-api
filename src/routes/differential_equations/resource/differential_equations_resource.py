@@ -1,12 +1,12 @@
 from fastapi import APIRouter,HTTPException
-from ..domain.models.differential_equation_request import DifferentialEquationRequest
-from ..domain.models.differential_equation_response import DifferentialEquationResponse
-from ..service.differential_equations_service import DifferentialEquationsService
+from routes.differential_equations.domain.models.differential_equation_request import DifferentialEquationRequest
+from routes.differential_equations.domain.models.differential_equation_response import DifferentialEquationResponse
+from routes.differential_equations.service.differential_equations_service import DifferentialEquationsService
 
 CONTEXT_PATH = "differential-equations"
 
 differentialEquationsRouter = APIRouter(
-    prefix=f"api/v1/{CONTEXT_PATH}",
+    prefix=f"/api/v1/{CONTEXT_PATH}",
     tags=["differential-equations"]
 )
 

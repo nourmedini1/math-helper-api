@@ -8,10 +8,10 @@ class DifferentialEquationRequest(BaseModel):
     secondCoefficient : Optional[str]
     thirdCoefficient : Optional[str]
     fourthCoefficient : Optional[str]
-    firstInitialCondition = Optional[List[str]]
-    secondInitialCondition = Optional[List[str]] 
-    thirdInitialCondition = Optional[List[str]] 
-    fourthInitialCondition = Optional[List[str]]
+    firstInitialCondition : Optional[List[str]]
+    secondInitialCondition : Optional[List[str]] 
+    thirdInitialCondition : Optional[List[str]] 
+    fourthInitialCondition : Optional[List[str]]
     constant : Optional[str]
     rightHandSide : str = "0"
 

@@ -1,8 +1,8 @@
 import sympy as smp
-from ....utils.parse_input import InputParser
+from utils.parse_input import InputParser
 from typing import Union
-from ..domain.models.derivative_request import DerivativeRequest
-from ..domain.models.derivative_response import DerivativeResponse
+from routes.derivatives.domain.models.derivative_request import DerivativeRequest
+from routes.derivatives.domain.models.derivative_response import DerivativeResponse
 import traceback
 
 class DerivativesServiceMeta(type):
