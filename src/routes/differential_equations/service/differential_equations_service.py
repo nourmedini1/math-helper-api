@@ -17,6 +17,7 @@ class DifferentialEquationsService(metaclass= DifferentialEquationsServiceMeta) 
     
     
     def _parseCoefficients(
+            self,
             firstCoefficient : Optional[str], 
             secondCoefficient : Optional[str],
             thirdCoefficient : Optional[str],
@@ -41,6 +42,7 @@ class DifferentialEquationsService(metaclass= DifferentialEquationsServiceMeta) 
     
     
     def _parseInitialConditions(
+            self,
             firstInitialCondition : Optional[List[str]],
             secondInitialCondition : Optional[List[str]],
             thirdInitialCondition : Optional[List[str]],
@@ -83,14 +85,14 @@ class DifferentialEquationsService(metaclass= DifferentialEquationsServiceMeta) 
             variable)
         return variable,f,constant,rightHandSide,coefficients,initialConditions
 
-    def latexifyResult(equation : str , solution : str) -> tuple[str] :
+    def latexifyResult(self,equation : str , solution : str) -> tuple[str] :
         return smp.latex(equation),smp.latex(solution)
     
     def firstOrderDifferentialEquation(self,request : DifferentialEquationRequest) -> DifferentialEquationResponse :
         try : 
             variable,f,constant,rightHandSide,coefficients,initialConditions = self._setupEquationParameters(request)    
             equation = smp.Eq(coefficients[0]*f(variable) + coefficients[1]*f(variable).diff(variable) + constant, rightHandSide)
-            solution = smp.dsolve(equation, f, ics=initialConditions)
+            solution = smp.dsolve(equation,ics=initialConditions)
             latexifiedEquation,latexifiedSolution = self.latexifyResult(equation,solution)
             return DifferentialEquationResponse(solution=latexifiedSolution,equation=latexifiedEquation)
         except Exception as e : 
@@ -106,7 +108,7 @@ class DifferentialEquationsService(metaclass= DifferentialEquationsServiceMeta) 
                 + coefficients[0]*f(variable) 
                 + constant, 
                 rightHandSide)
-            solution = smp.dsolve(equation, f, ics=initialConditions)
+            solution = smp.dsolve(equation,ics=initialConditions)
             latexifiedEquation,latexifiedSolution = self.latexifyResult(equation,solution)
             return DifferentialEquationResponse(solution=latexifiedSolution,equation=latexifiedEquation)
         except Exception as e :
@@ -122,7 +124,7 @@ class DifferentialEquationsService(metaclass= DifferentialEquationsServiceMeta) 
                 + coefficients[0]*f(variable) 
                 + constant, 
                 rightHandSide)
-            solution = smp.dsolve(equation, f, ics=initialConditions)
+            solution = smp.dsolve(equation,ics=initialConditions)
             latexifiedEquation,latexifiedSolution = self.latexifyResult(equation,solution)
             return DifferentialEquationResponse(solution=latexifiedSolution,equation=latexifiedEquation)
         except Exception as e :
