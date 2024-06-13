@@ -3,6 +3,7 @@ from ....utils.parse_input import InputParser
 import sympy as smp
 from ..domain.models.differential_equation_request import DifferentialEquationRequest
 from ..domain.models.differential_equation_response import DifferentialEquationResponse 
+import traceback
 
 class DifferentialEquationsServiceMeta(type):
     _instances = {}
@@ -86,33 +87,46 @@ class DifferentialEquationsService(metaclass= DifferentialEquationsServiceMeta) 
         return smp.latex(equation),smp.latex(solution)
     
     def firstOrderDifferentialEquation(self,request : DifferentialEquationRequest) -> DifferentialEquationResponse :
-        variable,f,constant,rightHandSide,coefficients,initialConditions = self._setupEquationParameters(request)    
-        equation = smp.Eq(coefficients[0]*f(variable) + coefficients[1]*f(variable).diff(variable) + constant, rightHandSide)
-        solution = smp.dsolve(equation, f, ics=initialConditions)
-        latexifiedEquation,latexifiedSolution = self.latexifyResult(equation,solution)
-        return DifferentialEquationResponse(solution=latexifiedSolution,equation=latexifiedEquation)
-    
+        try : 
+            variable,f,constant,rightHandSide,coefficients,initialConditions = self._setupEquationParameters(request)    
+            equation = smp.Eq(coefficients[0]*f(variable) + coefficients[1]*f(variable).diff(variable) + constant, rightHandSide)
+            solution = smp.dsolve(equation, f, ics=initialConditions)
+            latexifiedEquation,latexifiedSolution = self.latexifyResult(equation,solution)
+            return DifferentialEquationResponse(solution=latexifiedSolution,equation=latexifiedEquation)
+        except Exception as e : 
+            traceback.print_exc()
+            raise e
+        
     def secondOrderDifferentialEquation(self,request : DifferentialEquationRequest) -> DifferentialEquationResponse :
-        variable,f,constant,rightHandSide,coefficients,initialConditions = self._setupEquationParameters(request)    
-        equation = smp.Eq(
-            coefficients[2]*f(variable).diff(variable,2) 
-            + coefficients[1]*f(variable).diff(variable) 
-            + coefficients[0]*f(variable) 
-            + constant, 
-            rightHandSide)
-        solution = smp.dsolve(equation, f, ics=initialConditions)
-        latexifiedEquation,latexifiedSolution = self.latexifyResult(equation,solution)
-        return DifferentialEquationResponse(solution=latexifiedSolution,equation=latexifiedEquation)
-    
+        try :
+            variable,f,constant,rightHandSide,coefficients,initialConditions = self._setupEquationParameters(request)    
+            equation = smp.Eq(
+                coefficients[2]*f(variable).diff(variable,2) 
+                + coefficients[1]*f(variable).diff(variable) 
+                + coefficients[0]*f(variable) 
+                + constant, 
+                rightHandSide)
+            solution = smp.dsolve(equation, f, ics=initialConditions)
+            latexifiedEquation,latexifiedSolution = self.latexifyResult(equation,solution)
+            return DifferentialEquationResponse(solution=latexifiedSolution,equation=latexifiedEquation)
+        except Exception as e :
+            traceback.print_exc()
+            raise e
+        
     def thirdOrderDifferentialEquation(self,request : DifferentialEquationRequest) -> DifferentialEquationResponse :
-        variable,f,constant,rightHandSide,coefficients,initialConditions = self._setupEquationParameters(request)
-        equation = smp.Eq(
-            coefficients[2]*f(variable).diff(variable,2) 
-            + coefficients[1]*f(variable).diff(variable) 
-            + coefficients[0]*f(variable) 
-            + constant, 
-            rightHandSide)
-        solution = smp.dsolve(equation, f, ics=initialConditions)
-        latexifiedEquation,latexifiedSolution = self.latexifyResult(equation,solution)
-        return DifferentialEquationResponse(solution=latexifiedSolution,equation=latexifiedEquation)
-    
+        try :
+            variable,f,constant,rightHandSide,coefficients,initialConditions = self._setupEquationParameters(request)
+            equation = smp.Eq(
+                coefficients[2]*f(variable).diff(variable,2) 
+                + coefficients[1]*f(variable).diff(variable) 
+                + coefficients[0]*f(variable) 
+                + constant, 
+                rightHandSide)
+            solution = smp.dsolve(equation, f, ics=initialConditions)
+            latexifiedEquation,latexifiedSolution = self.latexifyResult(equation,solution)
+            return DifferentialEquationResponse(solution=latexifiedSolution,equation=latexifiedEquation)
+        except Exception as e :
+            traceback.print_exc()
+            raise e
+
+        
