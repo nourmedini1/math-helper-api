@@ -1,4 +1,5 @@
 from typing import List,Optional,Dict
+from routes.differential_equations.domain.models.initial_condition import InitialCondition
 from utils.parse_input import InputParser
 import sympy as smp
 from routes.differential_equations.domain.models.differential_equation_request import DifferentialEquationRequest
@@ -18,52 +19,29 @@ class DifferentialEquationsService(metaclass= DifferentialEquationsServiceMeta) 
     
     def _parseCoefficients(
             self,
-            firstCoefficient : Optional[str], 
-            secondCoefficient : Optional[str],
-            thirdCoefficient : Optional[str],
-            fourthCoefficient : Optional[str]
+            coefficients : List[Optional[str]]
             ) -> List[str] :
         
         parsedCoefficients : List[str] = []
-
-        if firstCoefficient is not None :
-            parsedCoefficients.append(smp.sympify(InputParser.parse_expression(firstCoefficient)))
-
-        if secondCoefficient is not None :
-            parsedCoefficients.append(smp.sympify(InputParser.parse_expression(secondCoefficient)))
-
-        if thirdCoefficient is not None :
-            parsedCoefficients.append(smp.sympify(InputParser.parse_expression(thirdCoefficient)))
-        
-        if fourthCoefficient is not None :
-            parsedCoefficients.append(smp.sympify(InputParser.parse_expression(fourthCoefficient)))
-
+        for coefficient in coefficients :
+            if coefficient is not None :
+                parsedCoefficients.append(smp.sympify(InputParser.parse_expression(coefficient)))
         return parsedCoefficients
-    
+
     
     def _parseInitialConditions(
-            self,
-            firstInitialCondition : Optional[List[str]],
-            secondInitialCondition : Optional[List[str]],
-            thirdInitialCondition : Optional[List[str]],
-            fourthInitialCondition : Optional[List[str]],
-            f : smp.Function,
-            variable : smp.Symbol
-        ) -> Dict :
+        self,
+        initialConditions : List[Optional[InitialCondition]],
+        f : smp.Function,
+        variable : smp.Symbol) -> Dict :
 
         ics = {}
-        if firstInitialCondition not in [None,""] : 
-            ics[f(firstInitialCondition[0])] = firstInitialCondition[1]
-
-        if secondInitialCondition not in [None,""] :
-            ics[f(variable).diff(variable).subs(variable,secondInitialCondition[0])] = secondInitialCondition[1]
-
-        if thirdInitialCondition not in [None,""] :
-            ics[f(variable).diff(variable,2).subs(variable,thirdInitialCondition[0])] = thirdInitialCondition[1]
-
-        if fourthInitialCondition not in [None,""] :
-            ics[f(variable).diff(variable,3).subs(variable,fourthInitialCondition[0])] = fourthInitialCondition[1]
-
+        for i,initialCondition in enumerate(initialConditions):
+            if initialCondition is not None :
+                if i == 0 : 
+                    ics[f(initialCondition.x)] = initialCondition.y
+                else :
+                    ics[f(variable).diff(variable,i).subs(variable,initialCondition.x)] = initialCondition.y
         return ics
     
     def _setupEquationParameters(self,request : DifferentialEquationRequest) -> tuple[any] :
@@ -71,18 +49,8 @@ class DifferentialEquationsService(metaclass= DifferentialEquationsServiceMeta) 
         f = smp.Function('f')
         constant = smp.sympify(InputParser.parse_expression(request.constant))
         rightHandSide = smp.sympify(InputParser.parse_expression(request.rightHandSide))
-        coefficients = self._parseCoefficients(
-            request.firstCoefficient,
-            request.secondCoefficient,
-            request.thirdCoefficient,
-            request.fourthCoefficient)
-        initialConditions = self._parseInitialConditions(
-            request.firstInitialCondition,
-            request.secondInitialCondition,
-            request.thirdInitialCondition,
-            request.fourthInitialCondition,
-            f,
-            variable)
+        coefficients = self._parseCoefficients(request.coefficients)
+        initialConditions = self._parseInitialConditions(request.initialConditions,f,variable)
         return variable,f,constant,rightHandSide,coefficients,initialConditions
 
     def latexifyResult(self,equation : str , solution : str) -> tuple[str] :
@@ -92,7 +60,7 @@ class DifferentialEquationsService(metaclass= DifferentialEquationsServiceMeta) 
         try : 
             variable,f,constant,rightHandSide,coefficients,initialConditions = self._setupEquationParameters(request)    
             equation = smp.Eq(coefficients[0]*f(variable) + coefficients[1]*f(variable).diff(variable) + constant, rightHandSide)
-            solution = smp.dsolve(equation,ics=initialConditions)
+            solution = smp.dsolve(equation,ics=initialConditions).simplify()
             latexifiedEquation,latexifiedSolution = self.latexifyResult(equation,solution)
             return DifferentialEquationResponse(solution=latexifiedSolution,equation=latexifiedEquation)
         except Exception as e : 
@@ -108,7 +76,7 @@ class DifferentialEquationsService(metaclass= DifferentialEquationsServiceMeta) 
                 + coefficients[0]*f(variable) 
                 + constant, 
                 rightHandSide)
-            solution = smp.dsolve(equation,ics=initialConditions)
+            solution = smp.dsolve(equation,ics=initialConditions).simplify()
             latexifiedEquation,latexifiedSolution = self.latexifyResult(equation,solution)
             return DifferentialEquationResponse(solution=latexifiedSolution,equation=latexifiedEquation)
         except Exception as e :
@@ -124,7 +92,7 @@ class DifferentialEquationsService(metaclass= DifferentialEquationsServiceMeta) 
                 + coefficients[0]*f(variable) 
                 + constant, 
                 rightHandSide)
-            solution = smp.dsolve(equation,ics=initialConditions)
+            solution = smp.dsolve(equation,ics=initialConditions).simplify()
             latexifiedEquation,latexifiedSolution = self.latexifyResult(equation,solution)
             return DifferentialEquationResponse(solution=latexifiedSolution,equation=latexifiedEquation)
         except Exception as e :
