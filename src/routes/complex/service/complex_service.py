@@ -17,21 +17,20 @@ class ComplexServiceMeta(type):
 class ComplexService(metaclass= ComplexServiceMeta) :
 
     def convertToPlarForm(self,request : PolarFormRequest) -> PolarFormResponse :
-        complexNumber = ComplexUtils.createAlgebraicForm(real= request.real, imaginary= request.imaginary)
         latexifiedComplexNumber = ComplexUtils.latexifyComplexNumber(real= request.real, imaginary= request.imaginary)
-        polarForm = ComplexUtils.createPolarForm(complexNumber)
+        polarForm = ComplexUtils.createPolarForm(real= request.real , imaginary= request.imaginary)
         return PolarFormResponse(algebraicForm=latexifiedComplexNumber, polarForm=polarForm)
     
     def _parseComplexInput(self,request : ComplexOperationRequest) -> tuple[str] :
         z1 = ComplexUtils.latexifyComplexNumber(real= request.real1,imaginary=request.imaginary1)
         z2 = ComplexUtils.latexifyComplexNumber(real= request.real2,imaginary=request.imaginary2)
-        polarZ1 = ComplexUtils.createPolarForm(ComplexUtils.createAlgebraicForm(real=request.real1, imaginary=request.imaginary1))
-        polarZ2 = ComplexUtils.createPolarForm(ComplexUtils.createAlgebraicForm(real=request.real2, imaginary=request.imaginary2))
+        polarZ1 = ComplexUtils.createPolarForm(real=request.real1, imaginary=request.imaginary1)
+        polarZ2 = ComplexUtils.createPolarForm(real=request.real2, imaginary=request.imaginary2)
         return z1,z2,polarZ1,polarZ2
     
     def _parseComplexOutput(self,real : float , imaginary : float) -> tuple[str] : 
         resultAlgebraicForm = ComplexUtils.latexifyComplexNumber(real=real, imaginary=imaginary)
-        resultPolarForm = ComplexUtils.createPolarForm(ComplexUtils.createAlgebraicForm(real=real,imaginary=imaginary))
+        resultPolarForm = ComplexUtils.createPolarForm(real=real,imaginary=imaginary)
         return resultAlgebraicForm,resultPolarForm
 
     def addComplexNumbers(self,request : ComplexOperationRequest) -> ComplexOperationResponse:

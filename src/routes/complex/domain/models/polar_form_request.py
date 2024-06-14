@@ -1,5 +1,6 @@
 from pydantic import BaseModel
+from typing import Union
 
 class PolarFormRequest(BaseModel):
-    real : float
-    imaginary : float 
+    real : Union[float,int]
+    imaginary : Union[float,int]
