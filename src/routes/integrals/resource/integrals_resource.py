@@ -60,3 +60,4 @@ async def definite_triple_integral(request : IntegralRequest) -> IntegralRespons
         return response
     except Exception as e:
         raise HTTPException(status_code=400,detail= str(e))
+    
