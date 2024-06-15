@@ -17,5 +17,5 @@ app.include_router(taylorSeriesRouter)
 
 @app.get("/") 
 def math_helper_root_path():
-    return {"value": "xelcome to math helper api"}
+    return {"value": "welcome to math helper api"}
 
