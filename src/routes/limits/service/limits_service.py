@@ -15,10 +15,11 @@ class LimitsServiceMeta(type):
     
 class LimitsService(metaclass= LimitsServiceMeta) :
 
-    def _setupLimitBounds(bounds : List[Bound]) -> List[Bound] :
+    def _setupLimitBounds(self,bounds : List[Bound]) -> List[Bound] :
         for bound in bounds : 
             if isinstance(bound.value,str) :
                 bound.value = smp.sympify(InputParser.parse_expression(bound.value))
+        return bounds
 
     def _sympifyParameters(self,request : LimitRequest) -> tuple[Any] : 
         sympifiedVariables = [smp.Symbol(variable) for variable in request.variables]
