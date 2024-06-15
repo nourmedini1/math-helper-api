@@ -26,7 +26,7 @@ class TaylorSeriesService(metaclass= TaylorSeriesServiceMeta) :
     
     def taylorSeries(self,request : TaylorSeriesRequest) -> TaylorSeriesResponse :
         expression,variable,near = self._sympifyParameters(request)
-        series = smp.series(smp.simplify(expression),variable,near,n=request.order)
+        series = smp.series(smp.simplify(expression),variable,near,n=request.order+1)
         return TaylorSeriesResponse(
             expression = smp.latex(expression),
             result = smp.latex(series)
