@@ -1,7 +1,7 @@
 from fastapi import APIRouter,HTTPException
-from src.routes.sum.service.sum_service import SumService
-from src.routes.sum.domain.models.sum_request import SumRequest
-from src.routes.sum.domain.models.sum_response import SumResponse
+from routes.sum.service.sum_service import SumService
+from routes.sum.domain.models.sum_request import SumRequest
+from routes.sum.domain.models.sum_response import SumResponse
 
 
 CONTEXT_PATH = "sum"
@@ -29,4 +29,4 @@ async def numeric_sum(request : SumRequest) -> SumResponse :
     except Exception as e:
         raise HTTPException(status_code=400,detail= str(e))
     
-    
+

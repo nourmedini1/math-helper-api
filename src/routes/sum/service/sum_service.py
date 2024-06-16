@@ -1,3 +1,4 @@
+import traceback
 import sympy as smp
 from typing import Union
 from routes.sum.domain.models.sum_request import SumRequest
@@ -27,32 +28,36 @@ class SumService(metaclass= SumServiceMeta) :
         lowerLimit,upperLimit = self._setupLimits(request.lowerLimit,request.upperLimit)
         return expression,variable,lowerLimit,upperLimit
     
-    def symbolicSum(self, request : SumRequest) -> SumResponse :        
-        expression,variable,lowerLimit,upperLimit = self._setupParameters(request)
-        summation = smp.summation(expression,(variable,lowerLimit,upperLimit))  
-        if summation.is_convergent() :
-            convergent = True
-            try :
-                result = smp.simplify(smp.summation(expression,(variable,lowerLimit,upperLimit)))
-            except Exception:
-                result = "no numeric form found"
-        else :
-            convergent = False
-            result = ""
-        return SumResponse(
-            convergent= convergent,
-            summation = smp.latex(summation),
-            result = result
-            )
+    def symbolicSum(self, request : SumRequest) -> SumResponse :  
+        try :      
+            expression,variable,lowerLimit,upperLimit = self._setupParameters(request)
+            summation = smp.Sum(expression,(variable,lowerLimit,upperLimit))  
+            if summation.is_convergent() :
+                convergent = True
+                try :
+                    result = smp.simplify(smp.summation(expression,(variable,lowerLimit,upperLimit)))
+                except Exception:
+                    result = "no symbolic form found"
+            else :
+                convergent = False
+                result = ""
+            return SumResponse(
+                convergent= convergent,
+                summation = smp.latex(summation),
+                result = smp.latex(result)
+                )
+        except Exception as e:
+            traceback.print_exc()
+            raise e
 
         
     def numericSum(self,request : SumRequest) -> SumResponse :
         expression,variable,lowerLimit,upperLimit = self._setupParameters(request)
-        summation = smp.summation(expression,(variable,lowerLimit,upperLimit))
+        summation = smp.Sum(expression,(variable,lowerLimit,upperLimit))
         if summation.is_convergent() :
             convergent = True
             try :
-                result = smp.N(smp.summation(expression,(variable,lowerLimit,upperLimit)))
+                result = smp.N(smp.Sum(expression,(variable,lowerLimit,upperLimit)))
             except Exception:
                 result = "no numeric form found"
         else :
@@ -61,7 +66,7 @@ class SumService(metaclass= SumServiceMeta) :
         return SumResponse(
             convergent= convergent,
             summation = smp.latex(summation),
-            result = result
+            result = smp.latex(result)
             )
 
         
