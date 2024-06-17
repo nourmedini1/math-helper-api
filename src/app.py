@@ -8,6 +8,8 @@ from routes.taylor_series.resource.taylor_series_resource import taylorSeriesRou
 from routes.sum.resource.sum_resource import sumRouter
 from routes.product.resource.product_resource import productRouter
 from routes.linear_systems.resource.linear_systems_resource import linearSystemsRouter
+from routes.matrix.resource.matrix_operations_resource import matrixOperationsRouter
+
 
 app = FastAPI()
 
@@ -20,6 +22,7 @@ app.include_router(taylorSeriesRouter)
 app.include_router(sumRouter)
 app.include_router(productRouter)
 app.include_router(linearSystemsRouter)
+app.include_router(matrixOperationsRouter)
 
 
 @app.get("/") 
