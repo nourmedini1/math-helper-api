@@ -1,4 +1,5 @@
 from typing import List
+
 class MatrixUtils :
     @staticmethod
     def createIdentityMatrix(matrixOrder : int) -> List[List[float]]:
