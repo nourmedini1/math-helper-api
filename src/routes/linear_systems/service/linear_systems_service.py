@@ -1,3 +1,4 @@
+import traceback
 from routes.linear_systems.domain.models.linear_system_request import LinearSystemRequest
 from routes.linear_systems.domain.models.linear_system_response import LinearSystemResponse
 from utils.parse_input import InputParser
@@ -30,10 +31,10 @@ class LinearSystemsService(metaclass= LinearSystemsServiceMeta) :
     def _setupVariables(self,variables : List[str]) -> List[smp.Symbol] :
         return list(map(smp.Symbol,variables))
     
-    def _latexifyEquations(equations : List) -> List[str] : 
+    def _latexifyEquations(self,equations : List) -> List[str] : 
         return list(map(smp.latex,equations))
 
-    def _latexifyLinearSystem(latexifiedEquations : list[str]) :
+    def _latexifyLinearSystem(self,latexifiedEquations : list[str]) :
         linearSystem = ""
         for i in range(len(latexifiedEquations)-1) :
             linearSystem += latexifiedEquations[i] + LinearSystemsService.LATEX_SEPERATOR
@@ -51,17 +52,21 @@ class LinearSystemsService(metaclass= LinearSystemsServiceMeta) :
         return latexResults
     
     def linearSystem(self, request : LinearSystemRequest) -> LinearSystemResponse:
-        rightHandSide = self._setupRightHandSide(request.righHandSide)
-        equations = self._setupEquations(request.equations,rightHandSide)
-        variables = self._setupVariables(request.variables)
-        results = self._solveLinearSystem(equations,variables)
-        latexifiedEquations = self._latexifyEquations(equations)
-        latexifiedLinearSystem = self._latexifyLinearSystem(latexifiedEquations)
-        latexifiedResults = self._latexifyResults(results,variables)
-        return LinearSystemResponse(
-            linearSystem = latexifiedLinearSystem,
-            result = latexifiedResults
-        )
+        try :
+            rightHandSide = self._setupRightHandSide(request.righHandSide)
+            equations = self._setupEquations(request.equations,rightHandSide)
+            variables = self._setupVariables(request.variables)
+            results = self._solveLinearSystem(equations,variables)
+            latexifiedEquations = self._latexifyEquations(equations)
+            latexifiedLinearSystem = self._latexifyLinearSystem(latexifiedEquations)
+            latexifiedResults = self._latexifyResults(results,variables)
+            return LinearSystemResponse(
+                linearSystem = latexifiedLinearSystem,
+                result = latexifiedResults
+            )
+        except Exception as e :
+            traceback.print_exc()
+            raise e
   
 
     

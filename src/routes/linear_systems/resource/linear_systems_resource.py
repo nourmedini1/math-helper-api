@@ -1,3 +1,4 @@
+import traceback
 from fastapi import HTTPException,APIRouter
 from routes.linear_systems.service.linear_systems_service import LinearSystemsService
 from routes.linear_systems.domain.models.linear_system_request import LinearSystemRequest
@@ -17,9 +18,10 @@ async def linear_system(request : LinearSystemRequest) -> LinearSystemResponse :
         response = LinearSystemsService().linearSystem(request)
         return response
     except Exception as e:
+        traceback.print_exc()
         raise HTTPException(status_code=400,detail= str(e))
     
-    
+
 
 
 
