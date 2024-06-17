@@ -1,10 +1,10 @@
 from pydantic import BaseModel
-from typing import Optional,List
+from typing import Optional
 
 class MatrixResponse(BaseModel) :
     matrix : Optional[str]
-    eignValue : Optional[str]
-    eignVector : Optional[str]
+    eigenValue : Optional[str]
+    eigenVector : Optional[str]
     determinant : Optional[str]
     rank : Optional[str]
     
