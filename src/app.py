@@ -6,6 +6,7 @@ from routes.integrals.resource.integrals_resource import integralsRouter
 from routes.limits.resource.limits_resource import limitsRouter
 from routes.taylor_series.resource.taylor_series_resource import taylorSeriesRouter
 from routes.sum.resource.sum_resource import sumRouter
+from routes.product.resource.product_resource import productRouter
 
 app = FastAPI()
 
@@ -16,6 +17,7 @@ app.include_router(integralsRouter)
 app.include_router(limitsRouter)
 app.include_router(taylorSeriesRouter)
 app.include_router(sumRouter)
+app.include_router(productRouter)
 
 
 @app.get("/") 
