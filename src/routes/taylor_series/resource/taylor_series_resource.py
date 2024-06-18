@@ -7,7 +7,7 @@ from routes.taylor_series.domain.models.taylor_series_response import TaylorSeri
 CONTEXT_PATH = "taylor-series"
 taylorSeriesRouter = APIRouter(prefix=f"/api/v1/{CONTEXT_PATH}", tags=["taylor series"])
 
-@taylorSeriesRouter.post("/taylor-series", response_model=TaylorSeriesResponse, status_code=200)
+@taylorSeriesRouter.post("/expand", response_model=TaylorSeriesResponse, status_code=200)
 async def taylor_series(request : TaylorSeriesRequest) -> TaylorSeriesResponse :
     try :
         response = TaylorSeriesService().taylorSeries(request)
