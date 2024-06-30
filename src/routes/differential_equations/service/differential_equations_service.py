@@ -19,13 +19,15 @@ class DifferentialEquationsService(metaclass= DifferentialEquationsServiceMeta) 
     
     def _parseCoefficients(
             self,
-            coefficients : List[Optional[str]]
+            coefficients : List[Optional[str]],
             ) -> List[str] :
         
         parsedCoefficients : List[str] = []
         for coefficient in coefficients :
             if coefficient is not None :
                 parsedCoefficients.append(smp.sympify(InputParser.parse_expression(coefficient)))
+            else :
+                parsedCoefficients.append(smp.sympify("1"))
         return parsedCoefficients
 
     

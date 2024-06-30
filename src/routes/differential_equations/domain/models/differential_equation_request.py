@@ -7,7 +7,7 @@ class DifferentialEquationRequest(BaseModel):
     variable : str
     coefficients : List[Optional[str]]
     initialConditions : List[Optional[InitialCondition]]
-    constant : Optional[str]
+    constant : str = "0"
     rightHandSide : str = "0"
 
    
