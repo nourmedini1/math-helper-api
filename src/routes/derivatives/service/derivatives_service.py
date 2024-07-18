@@ -27,17 +27,17 @@ class DerivativesService(metaclass=DerivativesServiceMeta) :
             return float(derivingPoint)
         return derivingPoint
     
-    def _latexifyDerivativeExpression(self, variable : str , order : int, isPartialDerivative : bool) -> str : 
+    def _latexifyDerivativeExpression(self, variable : str , order : int, isPartialDerivative : bool, result : str) -> str : 
         if isPartialDerivative : 
             if order > 1 :
-                return "\\frac{\partial^" + str(order) + "f}{\partial^" + str(order) + smp.latex(variable) + "} = "
+                return "\\frac{\partial^" + str(order) + "f}{\partial^" + str(order) + smp.latex(variable) + "} = " + result
             else:
-                return "\\frac{\partial f}{\partial " + smp.latex(variable) + "} = "
+                return "\\frac{\partial f}{\partial " + smp.latex(variable) + "} = "+ result
         else:
             if order > 1:
-                return "\\frac{\mathrm{d}^" + str(order) + "f}{\mathrm{d}^" + str(order) + smp.latex(variable) + " } = "
+                return "\\frac{\mathrm{d}^" + str(order) + "f}{\mathrm{d}^" + str(order) + smp.latex(variable) + " } = " + result
             else:
-                return "\\frac{\mathrm{d}f}{\mathrm{d}" + smp.latex(variable) + " } = "   
+                return "\\frac{\mathrm{d}f}{\mathrm{d}" + smp.latex(variable) + " } = "  + result 
                         
     def symbolicDerivative(self, derivativeRequest : DerivativeRequest) -> DerivativeResponse : 
         try :
@@ -52,8 +52,8 @@ class DerivativesService(metaclass=DerivativesServiceMeta) :
             )
             result = smp.latex(smp.diff(expression,variable,derivativeRequest.order))
             return DerivativeResponse(
-                derivative= latexifiedExpression, 
-                result= result
+                derivative= smp.latex("f(x) = " + expression), 
+                result= latexifiedExpression
             )
         except Exception as e : 
             traceback.print_exc()
