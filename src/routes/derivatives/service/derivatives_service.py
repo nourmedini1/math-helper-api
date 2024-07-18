@@ -53,7 +53,7 @@ class DerivativesService(metaclass=DerivativesServiceMeta) :
             )
             
             return DerivativeResponse(
-                derivative= smp.latex("f(x) = " + expression), 
+                derivative= smp.latex("f(x) = ") + smp.latex(expression), 
                 result= latexifiedResult
             )
         except Exception as e : 
@@ -74,7 +74,7 @@ class DerivativesService(metaclass=DerivativesServiceMeta) :
                 result= smp.latex(smp.diff(expression,variable,derivativeRequest.order).subs(variable,derivingPoint))
             )
             return DerivativeResponse(
-                derivative= smp.latex("f(x) = " + expression), 
+                derivative= smp.latex("f(x) = ") + smp.latex(expression), 
                 result= latexifiedResult
             )
         except Exception as e : 
