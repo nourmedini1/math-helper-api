@@ -45,15 +45,16 @@ class DerivativesService(metaclass=DerivativesServiceMeta) :
                 variable= derivativeRequest.variable,
                 expression= InputParser.parse_expression(derivativeRequest.expression)
             )
-            latexifiedExpression = self._latexifyDerivativeExpression(
+            latexifiedResult = self._latexifyDerivativeExpression(
                 variable=variable, 
                 order= derivativeRequest.order, 
-                isPartialDerivative= derivativeRequest.partial
+                isPartialDerivative= derivativeRequest.partial,
+                result= smp.latex(smp.diff(expression,variable,derivativeRequest.order))    
             )
-            result = smp.latex(smp.diff(expression,variable,derivativeRequest.order))
+            
             return DerivativeResponse(
                 derivative= smp.latex("f(x) = " + expression), 
-                result= latexifiedExpression
+                result= latexifiedResult
             )
         except Exception as e : 
             traceback.print_exc()
@@ -66,15 +67,15 @@ class DerivativesService(metaclass=DerivativesServiceMeta) :
                 expression= InputParser.parse_expression(derivativeRequest.expression)
             )
             derivingPoint = self._parseDerivingPoint(derivativeRequest.derivingPoint)
-            latexifiedExpression = self._latexifyDerivativeExpression(
+            latexifiedResult = self._latexifyDerivativeExpression(
                 variable=variable, 
                 order= derivativeRequest.order, 
-                isPartialDerivative= derivativeRequest.partial
+                isPartialDerivative= derivativeRequest.partial,
+                result= smp.latex(smp.diff(expression,variable,derivativeRequest.order).subs(variable,derivingPoint))
             )
-            result = smp.latex(smp.diff(expression,variable,derivativeRequest.order).subs(variable,derivingPoint))
             return DerivativeResponse(
-                derivative= latexifiedExpression, 
-                result= result
+                derivative= smp.latex("f(x) = " + expression), 
+                result= latexifiedResult
             )
         except Exception as e : 
             traceback.print_exc()
