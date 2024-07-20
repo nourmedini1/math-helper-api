@@ -89,7 +89,8 @@ class DifferentialEquationsService(metaclass= DifferentialEquationsServiceMeta) 
         try :
             variable,f,constant,rightHandSide,coefficients,initialConditions = self._setupEquationParameters(request)
             equation = smp.Eq(
-                coefficients[2]*f(variable).diff(variable,2) 
+                coefficients[3]*f(variable).diff(variable,3)
+                + coefficients[2]*f(variable).diff(variable,2) 
                 + coefficients[1]*f(variable).diff(variable) 
                 + coefficients[0]*f(variable) 
                 + constant, 
