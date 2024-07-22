@@ -63,8 +63,13 @@ class DifferentialEquationsService(metaclass= DifferentialEquationsServiceMeta) 
             variable,f,constant,rightHandSide,coefficients,initialConditions = self._setupEquationParameters(request)    
             equation = smp.Eq(coefficients[0]*f(variable) + coefficients[1]*f(variable).diff(variable) + constant, rightHandSide)
             solution = smp.dsolve(equation,ics=initialConditions).simplify()
-            latexifiedEquation,latexifiedSolution = self.latexifyResult(equation,solution)
-            return DifferentialEquationResponse(solution=latexifiedSolution,equation=latexifiedEquation)
+            returnedEquation = smp.Eq(
+                coefficients[1]*smp.Symbol("y'") 
+                + coefficients[0]*smp.Symbol("y") 
+                + constant, 
+                rightHandSide)
+            latexifiedEquation,latexifiedSolution = self.latexifyResult(returnedEquation,solution)
+            return DifferentialEquationResponse(solution=latexifiedSolution.replace("f{\\left(x \\right)}","y"),equation=latexifiedEquation)
         except Exception as e : 
             traceback.print_exc()
             raise e
@@ -101,8 +106,14 @@ class DifferentialEquationsService(metaclass= DifferentialEquationsServiceMeta) 
                 + constant, 
                 rightHandSide)
             solution = smp.dsolve(equation,ics=initialConditions).simplify()
-            latexifiedEquation,latexifiedSolution = self.latexifyResult(equation,solution)
-            return DifferentialEquationResponse(solution=latexifiedSolution,equation=latexifiedEquation)
+            returnedEquation = smp.Eq(coefficients[3]*smp.Symbol("y'''") 
+                + coefficients[2]*smp.Symbol("y''") 
+                + coefficients[1]*smp.Symbol("y'") 
+                + coefficients[0]*smp.Symbol("y") 
+                + constant, 
+                rightHandSide)
+            latexifiedEquation,latexifiedSolution = self.latexifyResult(returnedEquation,solution)
+            return DifferentialEquationResponse(solution=latexifiedSolution.replace("f{\\left(x \\right)}","y"),equation=latexifiedEquation)
         except Exception as e :
             traceback.print_exc()
             raise e
