@@ -49,7 +49,7 @@ class MatrixOperationsService(metaclass= MatrixOperationsServiceMeta) :
     
     def invertMatrix(self, request : MatrixRequest) -> MatrixResponse : 
         matrix = request.matrixA
-        if MatrixUtils.checkInversibility(request) is False :
+        if MatrixUtils.checkInversibility(request.matrixA) is False :
             raise Exception("Matrix is not invertible")
         else :
             order = len(matrix)
