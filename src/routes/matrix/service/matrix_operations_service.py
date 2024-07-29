@@ -29,9 +29,10 @@ class MatrixOperationsService(metaclass= MatrixOperationsServiceMeta) :
                 resultMatrix[i][j] = request.matrixA[i][j] + request.matrixB[i][j]
         latexifiedMatrix = smp.latex(smp.Matrix(resultMatrix))
         return MatrixResponse(
+            matrixA= smp.latex(smp.Matrix(request.matrixA)),
+            matrixB= smp.latex(smp.Matrix(request.matrixB)),
             matrix= latexifiedMatrix
-        )
-    
+        )  
 
     def multiplyMatrixes(self, request : MatrixRequest) -> MatrixResponse :
         columnsA = len(request.matrixA)
@@ -44,6 +45,8 @@ class MatrixOperationsService(metaclass= MatrixOperationsServiceMeta) :
                     resultMatrix[i][j] += request.matrixA[i][k] * request.matrixB[k][j]
         latexifiedMatrix = smp.latex(smp.Matrix(resultMatrix))
         return MatrixResponse(
+            matrixA= smp.latex(smp.Matrix(request.matrixA)),
+            matrixB= smp.latex(smp.Matrix(request.matrixB)),
             matrix=latexifiedMatrix
         )
     
@@ -70,6 +73,7 @@ class MatrixOperationsService(metaclass= MatrixOperationsServiceMeta) :
                         matrix,identity = MatrixUtils.applyOperationOnMatrix(matrix,identity,order,i,j)                    
             resultMatrix = smp.latex(smp.Matrix(identity))
             return MatrixResponse(
+                matrixA= smp.latex(smp.Matrix(matrix)),
                 matrix=resultMatrix
             )
         
@@ -97,7 +101,10 @@ class MatrixOperationsService(metaclass= MatrixOperationsServiceMeta) :
         for i in range(rows) :
             if matrix[i] == zeros :
                 allZeroRowsCount += 1
-        return MatrixResponse(rank=min([rows,columns]) - allZeroRowsCount)
+        return MatrixResponse(
+            rank=str(min([rows,columns]) - allZeroRowsCount),
+            matrixA= smp.latex(smp.Matrix(matrix))
+                              )
     
     def _setupEigenValue(self,eigenValueArray : np.ndarray ) -> str:
         eigenValue = []
@@ -120,6 +127,7 @@ class MatrixOperationsService(metaclass= MatrixOperationsServiceMeta) :
         matrixArray = np.array(request.matrixA)
         eigenValueArray, eigenVectorArray = np.linalg.eig(matrixArray)
         return MatrixResponse(
+            matrixA= smp.latex(smp.Matrix(request.matrixA)),
             eigenValue= self._setupEigenValue(eigenValueArray),
             eigenVector = self._setupEigenVector(eigenVectorArray)
         )
@@ -128,9 +136,9 @@ class MatrixOperationsService(metaclass= MatrixOperationsServiceMeta) :
         order = len(request.matrixA)
         matrix = request.matrixA
         if order == 1 :
-            return MatrixResponse(determinant=matrix[0][0])
+            return MatrixResponse(determinant=str(matrix[0][0]))
         if order == 2 : 
-            return MatrixResponse(determinant= matrix[0][0]*matrix[1][1] + matrix[0][1]*matrix[1][0])
+            return MatrixResponse(determinant= str(matrix[0][0]*matrix[1][1] + matrix[0][1]*matrix[1][0]))
         permutations = []
         for i in range(order-1) :
             for j in range(order) :
@@ -153,7 +161,9 @@ class MatrixOperationsService(metaclass= MatrixOperationsServiceMeta) :
                     diagonalProduct *= matrix[i][j]  
         for i in range(len(permutations)) :
             diagonalProduct *= permutations[i]
-        return MatrixResponse(determinant=str(diagonalProduct))
+        return MatrixResponse(
+            matrixA= smp.latex(smp.Matrix(matrix)),
+            determinant=str(diagonalProduct))
 
 
 
