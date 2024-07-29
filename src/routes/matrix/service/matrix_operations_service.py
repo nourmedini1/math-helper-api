@@ -136,9 +136,9 @@ class MatrixOperationsService(metaclass= MatrixOperationsServiceMeta) :
         order = len(request.matrixA)
         matrix = request.matrixA
         if order == 1 :
-            return MatrixResponse(determinant=str(matrix[0][0]))
+            return MatrixResponse(matrixA= smp.latex(smp.Matrix(matrix)),determinant=str(matrix[0][0]))
         if order == 2 : 
-            return MatrixResponse(determinant= str(matrix[0][0]*matrix[1][1] + matrix[0][1]*matrix[1][0]))
+            return MatrixResponse(matrixA= smp.latex(smp.Matrix(matrix)),determinant= str(matrix[0][0]*matrix[1][1] + matrix[0][1]*matrix[1][0]))
         permutations = []
         for i in range(order-1) :
             for j in range(order) :
