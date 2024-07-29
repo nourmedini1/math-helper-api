@@ -108,14 +108,14 @@ class MatrixOperationsService(metaclass= MatrixOperationsServiceMeta) :
     
     def _setupEigenValue(self,eigenValueArray : np.ndarray ) -> str:
         eigenValue = []
-        for element in eigenValueArray:
+        for element in eigenValueArray.tolist():
             eigenValue.append(element)
         latexEigenValue = smp.latex(smp.Matrix(eigenValue))
         return latexEigenValue
 
     def _setupEigenVector(self,eigenVectorArray : np.ndarray) -> str:
         eigenVector = []
-        for row in eigenVectorArray:
+        for row in eigenVectorArray.tolist():
             l = []
             for element in row:
                 l.append(element)
