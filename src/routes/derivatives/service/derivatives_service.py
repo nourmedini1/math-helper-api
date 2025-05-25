@@ -30,7 +30,7 @@ class DerivativesService(metaclass=DerivativesServiceMeta) :
     def _latexifyDerivativeExpression(self, variable : str , order : int, isPartialDerivative : bool, result : str) -> str : 
         if isPartialDerivative : 
             if order > 1 :
-                return "\\frac{\partial^" + str(order) + "f}{\partial^" + str(order) + smp.latex(variable) + "} = " + result
+                return r"\frac{\partial^" + str(order) + r"f}{\partial^" + str(order) + smp.latex(variable) + r"} = " + result
             else:
                 return "\\frac{\partial f}{\partial " + smp.latex(variable) + "} = "+ result
         else:
