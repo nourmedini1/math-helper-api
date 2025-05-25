@@ -32,12 +32,12 @@ class DerivativesService(metaclass=DerivativesServiceMeta) :
             if order > 1 :
                 return r"\frac{\partial^" + str(order) + r"f}{\partial^" + str(order) + smp.latex(variable) + r"} = " + result
             else:
-                return "\\frac{\partial f}{\partial " + smp.latex(variable) + "} = "+ result
+                return r"\frac{\partial f}{\partial " + smp.latex(variable) + r"} = " + result
         else:
             if order > 1:
-                return "\\frac{\mathrm{d}^" + str(order) + "f}{\mathrm{d}^" + str(order) + smp.latex(variable) + " } = " + result
+                return r"\frac{\mathrm{d}^" + str(order) + r"f}{\mathrm{d}^" + str(order) + smp.latex(variable) + r"} = " + result
             else:
-                return "\\frac{\mathrm{d}f}{\mathrm{d}" + smp.latex(variable) + " } = "  + result 
+                return r"\frac{\mathrm{d}f}{\mathrm{d}" + smp.latex(variable) + r"} = " + result
                         
     def symbolicDerivative(self, derivativeRequest : DerivativeRequest) -> DerivativeResponse : 
         try :
@@ -80,7 +80,7 @@ class DerivativesService(metaclass=DerivativesServiceMeta) :
         except Exception as e : 
             traceback.print_exc()
             raise e
-            
+
 
 
 

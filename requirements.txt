@@ -4,3 +4,4 @@ sympy==1.12
 pydantic==2.7.1
 numpy==2.0.0
 msgpack==1.0.7
+scipy==1.13.1
