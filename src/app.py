@@ -9,6 +9,7 @@ from routes.sum.resource.sum_resource import sumRouter
 from routes.product.resource.product_resource import productRouter
 from routes.linear_systems.resource.linear_systems_resource import linearSystemsRouter
 from routes.matrix.resource.matrix_operations_resource import matrixOperationsRouter
+from routes.function_plotting.resource.function_plotting_resource import functionPlottingRouter
 
 
 app = FastAPI()
@@ -23,6 +24,7 @@ app.include_router(sumRouter)
 app.include_router(productRouter)
 app.include_router(linearSystemsRouter)
 app.include_router(matrixOperationsRouter)
+app.include_router(functionPlottingRouter)
 
 
 @app.get("/") 
