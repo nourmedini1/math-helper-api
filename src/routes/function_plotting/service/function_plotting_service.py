@@ -22,6 +22,7 @@ class FunctionPlottingService:
         expr = expr.replace('^', '**')
         expr = re.sub(r'(\d)([a-zA-Z])', r'\1*\2', expr)
         expr = re.sub(r'(\d)(\()', r'\1*\2', expr)
+        expr = expr.replace('ln', 'log')  # <-- Add this if not present
         return expr
         
     def _create_function(self, function_str: str) -> FunctionData:
@@ -475,6 +476,16 @@ class FunctionPlottingService:
             unique_mask = np.append(True, np.diff(x) > 1e-10)
             x = x[unique_mask]
             y = y[unique_mask]
+
+            # --- If all values overflow, try plotting from -10 to 10 ---
+            if len(x) == 0 or len(y) == 0:
+                if lower != -10 or upper != 10:
+                    # Try again with default interval
+                    return self.generate_plot_data(function, -10, 10, precision, max_points, isFirstPlot)
+                else:
+                    raise Exception("All values overflowed or are invalid for the selected interval and for [-10, 10]. Try a different function.")
+            # ----------------------------------------------------------
+
             data = {'x': x.tolist(), 'y': y.tolist()}
             packed_data = msgpack.packb(data)
             compressed_data = zlib.compress(packed_data)
@@ -493,5 +504,3 @@ class FunctionPlottingService:
 
 
 
-service = FunctionPlottingService()
-print(service.generate_plot_data("x^2 - 4", -10, 10, 100, 3000, True))
