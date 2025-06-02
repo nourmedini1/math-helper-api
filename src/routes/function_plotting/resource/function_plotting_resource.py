@@ -17,10 +17,11 @@ async def plot_function(request: PlotRequest) -> PlotResponse:
     try:
         response = service.generate_plot_data(
             function=request.function,
-            lower_bound=request.lower_bound,
-            upper_bound=request.upper_bound,
+            lower_bound=request.lowerBound,
+            upper_bound=request.upperBound,
             precision=request.precision,
-            max_points=request.max_points
+            max_points=request.maxPoints,
+            isFirstPlot=request.isFirstPlot
         )
         return PlotResponse(**response)
     except Exception as e:
