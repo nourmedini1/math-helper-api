@@ -34,32 +34,58 @@ class ComplexService(metaclass= ComplexServiceMeta) :
         resultPolarForm = ComplexUtils.createPolarForm(real=real,imaginary=imaginary)
         return resultAlgebraicForm,resultPolarForm
 
-    def addComplexNumbers(self,request : ComplexOperationRequest) -> ComplexOperationResponse:
-        try :
-            z1,z2,polarZ1,polarZ2 = self._parseComplexInput(request)
-            resultReal = smp.simplify(request.real1+request.real2)
-            resultImaginary = smp.simplify(request.imaginary1+request.imaginary2)
-            resultAlgebraicForm,resultPolarForm = self._parseComplexOutput(resultReal,resultImaginary)
-            return ComplexOperationResponse(z1=z1, z2=z2, polarZ1=polarZ1, polarZ2=polarZ2, algebraicResult=resultAlgebraicForm, polarResult=resultPolarForm)
+    def addComplexNumbers(self, request: ComplexOperationRequest) -> ComplexOperationResponse:
+        try:
+            # Parse input strings to SymPy expressions
+            real1 = smp.sympify(request.real1)
+            real2 = smp.sympify(request.real2)
+            imaginary1 = smp.sympify(request.imaginary1)
+            imaginary2 = smp.sympify(request.imaginary2)
+
+            # Use parsed values for all further processing
+            z1, z2, polarZ1, polarZ2 = self._parseComplexInput(request)
+            resultReal = smp.simplify(real1 + real2)
+            resultImaginary = smp.simplify(imaginary1 + imaginary2)
+            resultAlgebraicForm, resultPolarForm = self._parseComplexOutput(resultReal, resultImaginary)
+            return ComplexOperationResponse(
+                z1=z1, z2=z2, polarZ1=polarZ1, polarZ2=polarZ2,
+                algebraicResult=resultAlgebraicForm, polarResult=resultPolarForm
+            )
         except Exception as e:
             raise e
 
-    def substractComplexNumbers(self,request : ComplexOperationRequest) -> ComplexOperationResponse :
-        try :
-            z1,z2,polarZ1,polarZ2 = self._parseComplexInput(request)
-            resultReal = smp.simplify(request.real1-request.real2)
-            resultImaginary = smp.simplify(request.imaginary1-request.imaginary2)
-            resultAlgebraicForm,resultPolarForm = self._parseComplexOutput(resultReal,resultImaginary)
-            return ComplexOperationResponse(z1=z1, z2=z2, polarZ1=polarZ1, polarZ2=polarZ2, algebraicResult=resultAlgebraicForm, polarResult=resultPolarForm)
+    def substractComplexNumbers(self, request: ComplexOperationRequest) -> ComplexOperationResponse:
+        try:
+            real1 = smp.sympify(request.real1)
+            real2 = smp.sympify(request.real2)
+            imaginary1 = smp.sympify(request.imaginary1)
+            imaginary2 = smp.sympify(request.imaginary2)
+
+            z1, z2, polarZ1, polarZ2 = self._parseComplexInput(request)
+            resultReal = smp.simplify(real1 - real2)
+            resultImaginary = smp.simplify(imaginary1 - imaginary2)
+            resultAlgebraicForm, resultPolarForm = self._parseComplexOutput(resultReal, resultImaginary)
+            return ComplexOperationResponse(
+                z1=z1, z2=z2, polarZ1=polarZ1, polarZ2=polarZ2,
+                algebraicResult=resultAlgebraicForm, polarResult=resultPolarForm
+            )
         except Exception as e:
             raise e
 
-    def multiplyComplexNumbers(self,request : ComplexOperationRequest) -> ComplexOperationResponse :
-        try :
-            z1,z2,polarZ1,polarZ2 = self._parseComplexInput(request)
-            resultReal = smp.simplify(request.real1*request.real2 - request.imaginary1*request.imaginary2)
-            resultImaginary = smp.simplify(request.real1*request.imaginary2 + request.real2*request.imaginary1)
-            resultAlgebraicForm,resultPolarForm = self._parseComplexOutput(resultReal,resultImaginary)
-            return ComplexOperationResponse(z1=z1, z2=z2, polarZ1=polarZ1, polarZ2=polarZ2, algebraicResult=resultAlgebraicForm, polarResult=resultPolarForm)
+    def multiplyComplexNumbers(self, request: ComplexOperationRequest) -> ComplexOperationResponse:
+        try:
+            real1 = smp.sympify(request.real1)
+            real2 = smp.sympify(request.real2)
+            imaginary1 = smp.sympify(request.imaginary1)
+            imaginary2 = smp.sympify(request.imaginary2)
+
+            z1, z2, polarZ1, polarZ2 = self._parseComplexInput(request)
+            resultReal = smp.simplify(real1 * real2 - imaginary1 * imaginary2)
+            resultImaginary = smp.simplify(real1 * imaginary2 + real2 * imaginary1)
+            resultAlgebraicForm, resultPolarForm = self._parseComplexOutput(resultReal, resultImaginary)
+            return ComplexOperationResponse(
+                z1=z1, z2=z2, polarZ1=polarZ1, polarZ2=polarZ2,
+                algebraicResult=resultAlgebraicForm, polarResult=resultPolarForm
+            )
         except Exception as e:
             raise e
